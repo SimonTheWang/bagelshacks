@@ -1,0 +1,28 @@
+<svg
+  width="200"
+  height="200"
+  viewBox="0 0 200 200"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Outer circle (donut base) -->
+  <circle
+    cx="100"
+    cy="100"
+    r="90"
+    fill="transparent"
+    stroke="#b87333"
+    stroke-width="20"
+  />
+
+  <!-- Inner circle (donut hole) -->
+  <circle
+    cx="100"
+    cy="100"
+    r="50"
+    fill="transparent"
+    stroke="#f4a460"
+    stroke-width="20"
+  />
+
+
+</svg>
