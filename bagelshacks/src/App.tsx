@@ -21,7 +21,7 @@ function App() {
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center bg-black">
         <div className="animate-fade-in-1">BAGELS HACKS</div>
         <div className="animate-fade-in-2">
-          <a href="https://luma.dev" target="_blank">
+          <a href="https://lu.ma/23wr4dkt" target="_blank">
             Visit Here
           </a>
         </div>
@@ -33,7 +33,7 @@ function App() {
 
 
       <div className="fixed top-0 left-0 w-full h-full -z-10">
-        {window.innerWidth >= 768 ? <Bagel speed={.5} /> : <BagelMini />}
+        {window.innerWidth >= 768 ? <Bagel speed={.25} /> : <BagelMini speed={.25}/>}
       </div>
     </>
   )
