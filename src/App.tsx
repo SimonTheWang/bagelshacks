@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import './App.css'
 import Bagel from './Bagel';
 import BagelMini from './Bagel-mini';
