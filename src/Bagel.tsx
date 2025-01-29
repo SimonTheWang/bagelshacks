@@ -14,7 +14,7 @@ const AsciiArt: React.FC<AsciiArtProps> = ({ speed = 1 }) => {
     const renderFrame = () => {
       const minDimension = Math.min(window.innerWidth, window.innerHeight);
       const height = Math.floor(minDimension / 5);
-      const width = height*2;
+      const width = Math.floor((minDimension / 5) * 2.5);
       const z: number[] = new Array(width * height).fill(0);
       const b: string[] = new Array(width * height).fill(" ");
 
