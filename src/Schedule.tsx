@@ -211,7 +211,7 @@ const schedule: DaySchedule[] = [
   
 const EventRow = ({ event }: { event: Event }) => (
   <TableRow key={event.time}>
-    <TableCell className="font-medium text-left w-[150px] sm:w-[200px]">{event.time}</TableCell>
+    <TableCell className="font-medium text-left w-[150px] sm:w-[100px]">{event.time}</TableCell>
     <TableCell className="text-middle w-[500px] sm:w-[200px]">{event.activity}</TableCell>
   </TableRow>
 );

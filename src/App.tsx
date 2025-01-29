@@ -50,7 +50,7 @@ function App() {
           </div>
           <div className="animate-fade-in-2 mt-20">
             <a href="https://lu.ma/23wr4dkt" target="_blank">
-              Visit Here
+              Register Here
             </a>
           </div>
         </div>
@@ -58,7 +58,11 @@ function App() {
 <div className="relative flex items-center justify-center h-[10vh]" style={{ zIndex: 1 }}>
 
 </div>
-      <div className="relative bottom-4 left transform -translate-x-1/2 text-sm text-gray-400 animate-fade-in-3">
+      <div className={`relative text-sm text-gray-400 animate-fade-in-3 ${
+        window.innerWidth >= 768 
+          ? "bottom-4 left transform -translate-x-1/2"
+          : "mx-4" 
+      }`}>
         <Schedule />
       </div>
     </>

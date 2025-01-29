@@ -33,22 +33,22 @@ const Countdown = () => {
   return (
     <div className="text-center">
       <div className="text-2xl font-bold mb-2">Time Until BagelsHacks</div>
-      <div className="grid grid-cols-4 gap-4">
-        <div>
+      <div className="flex justify-center space-x-4">
+        <div className="mx-2">
           <div className="text-4xl font-bold">{timeLeft.days}</div>
-          <div className="text-sm">Days</div>
+          <div className="text-sm mt-2">Days</div>
         </div>
-        <div>
+        <div className="mx-2">
           <div className="text-4xl font-bold">{timeLeft.hours}</div>
-          <div className="text-sm">Hours</div>
+          <div className="text-sm mt-2">Hrs</div>
         </div>
-        <div>
+        <div className="mx-2">
           <div className="text-4xl font-bold">{timeLeft.minutes}</div>
-          <div className="text-sm">Minutes</div>
+          <div className="text-sm mt-2">Mins</div>
         </div>
-        <div>
+        <div className="mx-2">
           <div className="text-4xl font-bold">{timeLeft.seconds}</div>
-          <div className="text-sm">Seconds</div>
+          <div className="text-sm mt-2">Secs</div>
         </div>
       </div>
     </div>
