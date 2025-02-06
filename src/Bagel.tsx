@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 interface AsciiArtProps {
   speed?: number; // Speed of the animation
+  className?: string;
 }
 
-const AsciiArt: React.FC<AsciiArtProps> = ({ speed = 1 }) => {
+const AsciiArt: React.FC<AsciiArtProps> = ({ speed = 1, className }) => {
   const canvasRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
@@ -70,6 +71,7 @@ const AsciiArt: React.FC<AsciiArtProps> = ({ speed = 1 }) => {
 
   return (
     <div
+      className={className}
       style={{
         display: "flex",
         justifyContent: "center",

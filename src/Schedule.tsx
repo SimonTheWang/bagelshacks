@@ -241,7 +241,6 @@ const Schedule = () => {
             <DayScheduleRow daySchedule={daySchedule} key={daySchedule.day} />
           ))}
         </TableBody>
-
       </Table>
     )
   }
