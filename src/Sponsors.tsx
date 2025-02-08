@@ -11,12 +11,20 @@ const Sponsors = ({className}: {className: string}) => {
                 </div>
             <h1 className="text-center text-xl font-bold">Sesame Sponsor</h1>
                 <div className="flex flex-wrap gap-4 justify-center">
-                    <div className="w-[300px] overflow-hidden">
-                        <img src="/Rootly.png" alt="Rootly" className="object-cover w-full h-full" />
+                    <div className="overflow-hidden flex justify-center items-center w-[300px] h-[200px]">
+                        <img src="/Rootly.png" alt="Rootly" className="m-5 p-4" />
                     </div>
                 </div>
             </div>  
-            <h1 className="text-center text-xl font-bold">Coming soon...</h1>
+            <h1 className="text-center text-xl font-bold">In colaboration with</h1>
+            <div className="flex flex-row gap-4">
+                <div className="w-1/2 overflow-hidden">
+                    <img src="/northstart.png" alt="nortstart" className="m-5 p-4" />
+                </div>
+                <div className="w-1/2 overflow-hidden">
+                    <img src="/elantech.png" alt="nortstart" className="m-5 p-4" />
+                </div>
+            </div>
         </div>
         :
         <div className={cn(className, "flex flex-col")}>
@@ -27,12 +35,20 @@ const Sponsors = ({className}: {className: string}) => {
                 </div>
             <h2 className="text-center text-xl font-bold">Sesame Sponsor</h2>
                 <div className="flex flex-wrap gap-4 justify-center">
-                    <div className="w-[100px] overflow-hidden">
-                        <img src="/Rootly.png" alt="Rootly" className="object-cover w-full h-full" />
+                    <div className="h-[50px] w-[150px] overflow-hidden py-4 flex justify-center items-center">
+                        <img src="/Rootly.png" alt="Rootly" className="mt-4" />
                     </div>
                 </div>
             </div>  
-            <h2 className="text-center text-xl font-bold">Coming soon...</h2>
+            <h2 className="text-center text-xl font-bold">In colaboration with</h2>
+            <div className="flex flex-row gap-4">
+                <div className="w-1/2 overflow-hidden">
+                    <img src="/northstart.png" alt="nortstart" className="m-5 p-4" />
+                </div>
+                <div className="w-1/2 overflow-hidden">
+                    <img src="/elantech.png" alt="nortstart" className="m-5 p-4" />
+                </div>
+            </div>
         </div>
     )
 }   

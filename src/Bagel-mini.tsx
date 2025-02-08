@@ -14,7 +14,7 @@ const BagelMini: React.FC<BagelMiniProps> = ({ speed = 1 }) => {
     const renderFrame = () => {
       const aspectRatio = window.innerWidth / window.innerHeight;
       const height = Math.floor(window.innerHeight * 0.8 / 5); // Use 80% of viewport height
-      const width = Math.floor(height * aspectRatio * 3); // Maintain aspect ratio
+      const width = Math.floor(height * aspectRatio * 4); // Maintain aspect ratio
       const z: number[] = new Array(width * height).fill(0);
       const b: string[] = new Array(width * height).fill(" ");
 
