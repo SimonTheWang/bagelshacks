@@ -1,92 +1,114 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import Bagel from './Bagel';
-import BagelMini from './Bagel-mini';
-import Schedule from './Schedule';
-import Countdown from './Countdown';
-import Sponsors from './Sponsors';
 
-function App() {
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "https://gist.github.com/gcr/1075131.js";
-    script.async = true;
-    document.body.appendChild(script);
-
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      document.body.removeChild(script);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const returnPoint =  
-  window.innerWidth >= 768 ? 
-  .90 * window.innerHeight : 
-  .80 * window.innerHeight;
-
-  const moveSpeed = window.innerWidth >= 768 ? 0.9 : 0.3
-
-  const scale = window.innerWidth >= 768 ? 
-  Math.max(0.5, 1 - scrollY/100000) : 
-  Math.max(0.5, 1 - scrollY/100000);
-
-  const bagelStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    transform: 
-    `translateX(${scrollY > returnPoint ? returnPoint + (scrollY - returnPoint) * -moveSpeed : scrollY * moveSpeed}px) scale(${scale})`,
+const App = () => {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+  
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  
+  // Set the launch date - example: 30 days from now
+  const calculateTimeLeft = () => {
+    const launchDate = new Date();
+    launchDate.setDate(launchDate.getDate() + 30);
+    
+    const difference = +launchDate - +new Date();
+    if (difference > 0) {
+      setTimeLeft({
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60)
+      });
+    }
   };
-
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      calculateTimeLeft();
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  });
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here you would typically send the email to your backend
+    console.log('Subscribing email:', email);
+    setIsSubscribed(true);
+    setEmail('');
+  };
+  
   return (
-    <>
-      <div style={{...bagelStyle, position: 'fixed' as const}}>
-        {window.innerWidth >= 768 ? <Bagel speed={0.25} /> : <BagelMini speed={0.25} />}
-      </div>
-      
-      <div className="flex items-center justify-center h-[90vh] p-5" style={{ zIndex: 1 }}>
-        <div className="text-center bg-black/50">
-          <div className="text-white mb-20">
-            <Countdown />
+    <div className="landing-page">
+      <div className="hero-section">
+        <div className="overlay"></div>
+        <div className="content">
+          <h1 className="title">EPIC EVENT</h1>
+          <p className="subtitle">The most anticipated event of the year is coming soon</p>
+          
+          <div className="countdown-container">
+            <div className="countdown-item">
+              <span className="countdown-value">{timeLeft.days}</span>
+              <span className="countdown-label">Days</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-value">{timeLeft.hours}</span>
+              <span className="countdown-label">Hours</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-value">{timeLeft.minutes}</span>
+              <span className="countdown-label">Minutes</span>
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-value">{timeLeft.seconds}</span>
+              <span className="countdown-label">Seconds</span>
+            </div>
           </div>
-          <div className="animate-fade-in-2 mt-20">
-            <a href="https://lu.ma/23wr4dkt" target="_blank" rel="noreferrer">
-              Register Here
+          
+          <div className="signup-container">
+            {!isSubscribed ? (
+              <form onSubmit={handleSubmit}>
+                <h3>Be the first to know when we launch</h3>
+                <div className="form-group">
+                  <input 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    required
+                  />
+                  <button type="submit" className="btn-notify">Notify Me</button>
+                </div>
+              </form>
+            ) : (
+              <div className="success-message">
+                <h3>Thank you for subscribing!</h3>
+                <p>We'll notify you when we launch.</p>
+              </div>
+            )}
+          </div>
+          
+          <div className="social-links">
+            <a href="#" className="social-icon">
+              <i className="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" className="social-icon">
+              <i className="fab fa-twitter"></i>
+            </a>
+            <a href="#" className="social-icon">
+              <i className="fab fa-instagram"></i>
             </a>
           </div>
         </div>
       </div>
-
-      {/* Container for Schedule and Sponsors */}
-      <div className="flex flex-col items-center justify-center z-10">
-        {/* Schedule */}
-        {window.innerWidth >= 768 ?
-        <div className="text-lg text-gray-400 animate-fade-in-1 -ml-[50vw]">
-          <Schedule />
-        </div>
-        :
-        <div className="text-lg text-gray-400 animate-fade-in-1 sm:-ml-[50vw]">
-          <Schedule />
-        </div>
-        }
-
-        {/* Sponsors */}
-        <div className="mt-[20vh] pb-20 animate-fade-in-2">
-          <Sponsors className="pt-30 pb-20 animate-fade-in-2" />
-        </div>
-      </div>
-    </>
+    </div>
   );
-}
+} 
 
 export default App;
