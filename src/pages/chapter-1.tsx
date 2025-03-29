@@ -4,13 +4,11 @@ import Bagel from '../components/Bagel';
 import BagelMini from '../components/Bagel-mini';
 import Schedule from '../components/Schedule';
 import Sponsors from '../components/Sponsors';
-import { Badge } from '../components/ui/badge'
 
 function App() {
   const [scrollY, setScrollY] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
-  const [scriptElement, setScriptElement] = useState<HTMLScriptElement | null>(null);
 
   useEffect(() => {
     // Set initial window dimensions
@@ -21,7 +19,6 @@ function App() {
     script.src = "https://gist.github.com/gcr/1075131.js";
     script.async = true;
     document.body.appendChild(script);
-    setScriptElement(script);
 
     const handleScroll = () => {
       setScrollY(window.scrollY);

@@ -2,16 +2,12 @@ import { useEffect, useState } from 'react';
 import '../App.css';
 import Bagel from '../components/Bagel';
 import BagelMini from '../components/Bagel-mini';
-import Schedule from '../components/Schedule';
-import Sponsors from '../components/Sponsors';
-import { Badge } from '../components/ui/badge'
 import { TypeAnimation } from 'react-type-animation';
 
 function App() {
   const [scrollY, setScrollY] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
-  const [scriptElement, setScriptElement] = useState<HTMLScriptElement | null>(null);
   const [glitchActive, setGlitchActive] = useState(false);
   const [glitchStyle, setGlitchStyle] = useState({});
   const [glitchCount, setGlitchCount] = useState(0);
@@ -25,7 +21,6 @@ function App() {
     script.src = "https://gist.github.com/gcr/1075131.js";
     script.async = true;
     document.body.appendChild(script);
-    setScriptElement(script);
 
     const handleScroll = () => {
       setScrollY(window.scrollY);
