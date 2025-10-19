@@ -232,7 +232,7 @@ function App() {
             </h1>
           </div>
           <div className="animate-fade-in-2 mt-20">
-            <a href="https://lu.ma/qz0v7wrq" target="_blank" rel="noreferrer">
+            <a href="https://luma.com/xnofhh2r" target="_blank" rel="noreferrer">
               Register Here
             </a>
           </div>
