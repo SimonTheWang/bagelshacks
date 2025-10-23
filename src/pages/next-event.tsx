@@ -8,9 +8,6 @@ function App() {
   const [scrollY, setScrollY] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
   const [windowHeight, setWindowHeight] = useState(0);
-  const [glitchActive, setGlitchActive] = useState(false);
-  const [glitchStyle, setGlitchStyle] = useState({});
-  const [glitchCount, setGlitchCount] = useState(0);
 
   useEffect(() => {
     // Set initial window dimensions
@@ -34,72 +31,14 @@ function App() {
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleResize);
 
-    // Glitch effect timer with shorter duration and less frequency
-    const glitchInterval = setInterval(() => {
-      // Lower probability (10% chance) for less frequent glitches
-      if (Math.random() < 0.3) {
-        setGlitchActive(true);
-        setGlitchCount(prev => prev + 1);
-        
-        // Generate random glitch style
-        const newGlitchStyle = generateGlitchStyle();
-        setGlitchStyle(newGlitchStyle);
-        
-        // Turn off glitch after shorter random duration
-        setTimeout(() => {
-          setGlitchActive(false);
-        }, Math.random() * 300 + 100); // 100-400ms duration (shorter)
-      }
-    }, 500); // Check less frequently (every 2 seconds)
-
     return () => {
       if (script && document.body.contains(script)) {
         document.body.removeChild(script);
       }
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
-      clearInterval(glitchInterval);
     };
   }, []);
-
-  // More subtle glitch style generator
-  const generateGlitchStyle = () => {
-    const colors = [
-      'rgba(255, 0, 0, 0.4)',    // Red (less opaque)
-      'rgba(0, 255, 0, 0.4)',    // Green (less opaque)
-      'rgba(0, 0, 255, 0.4)',    // Blue (less opaque)
-      'rgba(255, 255, 0, 0.4)',  // Yellow (less opaque)
-      'rgba(0, 255, 255, 0.4)',  // Cyan (less opaque)
-      'rgba(255, 0, 255, 0.4)',  // Magenta (less opaque)
-    ];
-    
-    // Fewer color blocks (1-2)
-    const numBlocks = Math.floor(Math.random() * 2) + 1;
-    let boxShadow = '';
-    
-    for (let i = 0; i < numBlocks; i++) {
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      // Smaller offsets for more subtle effect
-      const xOffset = Math.floor(Math.random() * 15 - 7);
-      const yOffset = Math.floor(Math.random() * 15 - 7);
-      const blur = Math.floor(Math.random() * 5);
-      const spread = Math.floor(Math.random() * 8);
-      
-      boxShadow += `${xOffset}px ${yOffset}px ${blur}px ${spread}px ${color}${i < numBlocks - 1 ? ', ' : ''}`;
-    }
-    
-    // Smaller translations
-    const translateX = Math.random() * 5 - 2.5;
-    const translateY = Math.random() * 5 - 2.5;
-    
-    return {
-      filter: `hue-rotate(${Math.random() * 180}deg) contrast(${1 + Math.random() * 0.5})`,
-      boxShadow,
-      transform: `translate(${translateX}px, ${translateY}px)`,
-      position: 'relative',
-      zIndex: 5,
-    };
-  };
 
   const isMobile = windowWidth < 768;
   
@@ -117,93 +56,128 @@ function App() {
     left: 0,
     width: '100%',
     height: '100%',
-    transition: glitchActive ? 'none' : 'transform 0.3s ease-out',
+    transition: 'transform 0.3s ease-out',
     transform: 
     `translateX(${scrollY > returnPoint ? returnPoint + (scrollY - returnPoint) * -moveSpeed : scrollY * moveSpeed}px) scale(${scale})`,
-    ...(glitchActive ? glitchStyle : {}),
   };
-
-  // Enhanced CSS for more subtle glitch animation
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes glitch-anim {
-        0% { 
-          transform: translate(-2px, -2px);
-        }
-        20% { 
-          transform: translate(2px, 2px);
-        }
-        40% { 
-          transform: translate(-2px, 2px);
-        }
-        60% { 
-          transform: translate(2px, -2px);
-        }
-        80% { 
-          transform: translate(-2px, 2px);
-        }
-        100% { 
-          transform: translate(2px, -2px);
-        }
-      }
-      
-      .glitch-effect {
-        position: relative;
-        overflow: visible !important;
-      }
-      
-      .glitch-effect::before,
-      .glitch-effect::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: -1;
-      }
-      
-      .glitch-effect::before {
-        left: -2px;
-        animation: glitch-anim 0.3s infinite linear alternate-reverse;
-        background-color: rgba(255, 0, 0, 0.2);
-        opacity: 0.5;
-      }
-      
-      .glitch-effect::after {
-        left: 2px;
-        animation: glitch-anim 0.3s infinite linear alternate;
-        background-color: rgba(0, 255, 255, 0.2);
-        opacity: 0.5;
-      }
-    `;
-    document.head.appendChild(style);
-    
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
 
   return (
     <>
-      {/* White container - directly in the main structure */}
-      <div className="w-full bg-white text-black p-2 text-center z-high animate-fade-in-1 h-[5vh] w-[50vw] content-container">
-        <a href="/chapter-1" rel="noreferrer" className="hover:underline font-bold">
-        Check out our last hackathon
-        </a>
-      </div>
-
-      {/* Badge */}
-      {/* <div className="fixed top-0 right-0 w-10 h-10 bg-white text-black p-2 text-center z-20 animate-fade-in-1">
-        <img src="/badge.png" alt="BagelHack Badge" className="w-full h-full object-contain" />
-      </div> */}
+      {/* Header */}
+      <header 
+        className="fixed top-0 left-0 right-0 shadow-sm" 
+        style={{ 
+          backgroundColor: '#ffffff', 
+          borderBottom: '1px solid #e0e0e0', 
+          zIndex: 9999, 
+          padding: isMobile ? '0.75rem 1rem' : '1rem 2rem' 
+        }}
+      >
+        <div 
+          className="flex items-center justify-center" 
+          style={{ 
+            gap: isMobile ? '0.5rem' : '1rem', 
+            fontFamily: 'system-ui, -apple-system, sans-serif', 
+            fontSize: isMobile ? '0.75rem' : '0.875rem', 
+            letterSpacing: '0.01em',
+            flexWrap: isMobile ? 'wrap' : 'nowrap'
+          }}
+        >
+          <a 
+            href="https://www.tiktok.com/@simonthewang" 
+            target="_blank" 
+            rel="noreferrer" 
+            className="transition-all"
+            style={{ 
+              color: '#1a1a1a', 
+              fontWeight: 700, 
+              textDecoration: 'underline',
+              textUnderlineOffset: '4px',
+              textDecorationThickness: '1.5px',
+              padding: isMobile ? '0.4rem 0.6rem' : '0.5rem 1rem',
+              borderRadius: '6px',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f3f4f6';
+              e.currentTarget.style.color = '#000';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#1a1a1a';
+            }}
+          >
+            Tiktok
+          </a>
+          <a 
+            href="https://www.instagram.com/simonthewang/"
+            target="_blank" 
+            rel="noreferrer" 
+            className="transition-all"
+            style={{ 
+              color: '#1a1a1a', 
+              fontWeight: 700, 
+              textDecoration: 'underline',
+              textUnderlineOffset: '4px',
+              textDecorationThickness: '1.5px',
+              padding: isMobile ? '0.4rem 0.6rem' : '0.5rem 1rem',
+              borderRadius: '6px',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f3f4f6';
+              e.currentTarget.style.color = '#000';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#1a1a1a';
+            }}
+          >
+            IG
+          </a>
+          <span style={{ color: '#d1d5db', margin: isMobile ? '0 0.2rem' : '0 0.5rem', fontSize: isMobile ? '0.875rem' : '1rem' }}>•</span>
+          <span style={{ 
+            color: '#6b7280', 
+            fontWeight: 600, 
+            fontStyle: 'italic', 
+            padding: isMobile ? '0.4rem 0.6rem' : '0.5rem 1rem',
+            whiteSpace: 'nowrap'
+          }}>
+            <a href="https://aerial-chemistry-647.notion.site/BAGELHACKS-II-29084364faef80389836d8cc11d97dc6?pvs=74" target="_blank" rel="noreferrer">
+            Build in Public
+            </a>
+          </span>
+          <span style={{ color: '#d1d5db', margin: isMobile ? '0 0.2rem' : '0 0.5rem', fontSize: isMobile ? '0.875rem' : '1rem' }}>•</span>
+          <a 
+            href="/chapter-1" 
+            rel="noreferrer" 
+            className="transition-all"
+            style={{ 
+              color: '#1a1a1a', 
+              fontWeight: 700, 
+              textDecoration: 'underline',
+              textUnderlineOffset: '4px',
+              textDecorationThickness: '1.5px',
+              padding: isMobile ? '0.4rem 0.6rem' : '0.5rem 1rem',
+              borderRadius: '6px',
+              backgroundColor: 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f3f4f6';
+              e.currentTarget.style.color = '#000';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#1a1a1a';
+            }}
+          >
+            last time
+          </a>
+        </div>
+      </header>
 
       <div 
-        style={bagelStyle} 
-        className={glitchActive ? 'glitch-effect' : ''}
-        key={`bagel-container-${glitchCount}`}
+        style={bagelStyle}
       >
         {isMobile ? <BagelMini speed={0.25} /> : <Bagel speed={0.25} />}
       </div>
@@ -232,7 +206,35 @@ function App() {
             </h1>
           </div>
           <div className="animate-fade-in-2 mt-20">
-            <a href="https://luma.com/xnofhh2r" target="_blank" rel="noreferrer">
+            <a 
+              href="https://luma.com/xnofhh2r" 
+              target="_blank" 
+              rel="noreferrer"
+              style={{
+                color: '#ffffff',
+                fontSize: isMobile ? '1rem' : '1.25rem',
+                fontWeight: 700,
+                textDecoration: 'underline',
+                textUnderlineOffset: isMobile ? '4px' : '6px',
+                textDecorationThickness: '2px',
+                padding: isMobile ? '0.65rem 1.5rem' : '0.75rem 2rem',
+                border: '2px solid #ffffff',
+                borderRadius: '8px',
+                display: 'inline-block',
+                transition: 'all 0.3s ease',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(10px)',
+                touchAction: 'manipulation'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
               Register Here
             </a>
           </div>
