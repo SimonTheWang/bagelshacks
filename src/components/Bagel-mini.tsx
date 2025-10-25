@@ -2,9 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 interface BagelMiniProps {
   speed?: number; // Speed of the animation
+  scrollWithPage?: boolean; // Whether the bagel scrolls with the page
 }
 
-const BagelMini: React.FC<BagelMiniProps> = ({ speed = 1 }) => {
+const BagelMini: React.FC<BagelMiniProps> = ({ speed = 1, scrollWithPage = false }) => {
   const canvasRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
@@ -86,13 +87,14 @@ const BagelMini: React.FC<BagelMiniProps> = ({ speed = 1 }) => {
   return (
     <div
       style={{
-        position: "fixed",
+        position: scrollWithPage ? "absolute" : "fixed",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
         overflow: "hidden",
         whiteSpace: "pre",
         fontFamily: "monospace",
+        pointerEvents: "none", // Don't interfere with clicking
       }}
     >
       <pre ref={canvasRef}></pre>

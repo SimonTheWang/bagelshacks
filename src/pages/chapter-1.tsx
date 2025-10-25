@@ -6,67 +6,39 @@ import Schedule from '../components/Schedule';
 import Sponsors from '../components/Sponsors';
 
 function App() {
-  const [scrollY, setScrollY] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
     // Set initial window dimensions
     setWindowWidth(window.innerWidth);
-    setWindowHeight(window.innerHeight);
 
     const script = document.createElement('script');
     script.src = "https://gist.github.com/gcr/1075131.js";
     script.async = true;
     document.body.appendChild(script);
 
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
     };
 
-    window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleResize);
 
     return () => {
       if (script && document.body.contains(script)) {
         document.body.removeChild(script);
       }
-      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const isMobile = windowWidth < 768;
-  
-  const returnPoint = isMobile ? 
-    0.80 * windowHeight : 
-    0.90 * windowHeight;
-
-  const moveSpeed = isMobile ? 0.3 : 0.9;
-
-  const scale = Math.max(0.5, 1 - scrollY/100000);
-
-  const bagelStyle = {
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    transform: 
-    `translateX(${scrollY > returnPoint ? returnPoint + (scrollY - returnPoint) * -moveSpeed : scrollY * moveSpeed}px) scale(${scale})`,
-  };
 
   return (
     <>
 
       
       {/* White container - directly in the main structure */}
-      <div className="w-full bg-white text-black p-2 text-center z-high animate-fade-in-1 h-[5vh] w-[50vw] content-container">
+      <div className="bg-white text-black p-2 text-center z-high animate-fade-in-1 h-[5vh] w-[50vw] content-container">
         <a href="https://trails.pixieset.com/bagelhacks/" target="_blank" rel="noreferrer" className="hover:underline font-bold">
         Pictures from the event are up!
         </a>
@@ -77,10 +49,7 @@ function App() {
         <img src="/badge.png" alt="BagelHack Badge" className="w-full h-full object-contain" />
       </div> */}
 
-
-      <div style={bagelStyle}>
-        {isMobile ? <BagelMini speed={0.25} /> : <Bagel speed={0.25} />}
-      </div>
+      {isMobile ? <BagelMini speed={0.25} /> : <Bagel speed={0.25} />}
       
       <div className="flex items-center justify-center h-[85vh] p-5" style={{ zIndex: 1 }}>
         <div className="text-center bg-black/50">

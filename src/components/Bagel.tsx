@@ -3,9 +3,10 @@ import React, { useEffect, useRef } from "react";
 interface AsciiArtProps {
   speed?: number; // Speed of the animation
   className?: string;
+  scrollWithPage?: boolean; // Whether the bagel scrolls with the page
 }
 
-const AsciiArt: React.FC<AsciiArtProps> = ({ speed = 1, className }) => {
+const AsciiArt: React.FC<AsciiArtProps> = ({ speed = 1, className, scrollWithPage = false }) => {
   const canvasRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
@@ -80,6 +81,12 @@ const AsciiArt: React.FC<AsciiArtProps> = ({ speed = 1, className }) => {
         overflow: "hidden", // Prevent scrolling
         whiteSpace: "pre",
         fontFamily: "monospace",
+        position: scrollWithPage ? "absolute" : "fixed",
+        top: scrollWithPage ? undefined : "50%",
+        left: scrollWithPage ? undefined : "50%",
+        transform: scrollWithPage ? undefined : "translate(-50%, -50%)",
+        width: scrollWithPage ? undefined : "100%",
+        pointerEvents: "none", // Don't interfere with clicking
       }}
     >
       <pre ref={canvasRef}></pre>

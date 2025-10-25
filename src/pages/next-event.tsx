@@ -1,65 +1,38 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../App.css';
 import Bagel from '../components/Bagel';
 import BagelMini from '../components/Bagel-mini';
+import WhosComing from '../components/WhosComing';
 import { TypeAnimation } from 'react-type-animation';
 
 function App() {
-  const [scrollY, setScrollY] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(0);
 
   useEffect(() => {
     // Set initial window dimensions
     setWindowWidth(window.innerWidth);
-    setWindowHeight(window.innerHeight);
 
     const script = document.createElement('script');
     script.src = "https://gist.github.com/gcr/1075131.js";
     script.async = true;
     document.body.appendChild(script);
 
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
     };
 
-    window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleResize);
 
     return () => {
       if (script && document.body.contains(script)) {
         document.body.removeChild(script);
       }
-      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const isMobile = windowWidth < 768;
-  
-  const returnPoint = isMobile ? 
-    0.80 * windowHeight : 
-    0.90 * windowHeight;
-
-  const moveSpeed = isMobile ? 0.3 : 0.9;
-
-  const scale = Math.max(0.5, 1 - scrollY/100000);
-
-  const bagelStyle = {
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    transition: 'transform 0.3s ease-out',
-    transform: 
-    `translateX(${scrollY > returnPoint ? returnPoint + (scrollY - returnPoint) * -moveSpeed : scrollY * moveSpeed}px) scale(${scale})`,
-  };
 
   return (
     <>
@@ -148,9 +121,8 @@ function App() {
             </a>
           </span>
           <span style={{ color: '#d1d5db', margin: isMobile ? '0 0.2rem' : '0 0.5rem', fontSize: isMobile ? '0.875rem' : '1rem' }}>•</span>
-          <a 
-            href="/chapter-1" 
-            rel="noreferrer" 
+          <Link 
+            to="/chapter-1"
             className="transition-all"
             style={{ 
               color: '#1a1a1a', 
@@ -172,21 +144,17 @@ function App() {
             }}
           >
             last time
-          </a>
+          </Link>
         </div>
       </header>
 
-      <div 
-        style={bagelStyle}
-      >
-        {isMobile ? <BagelMini speed={0.25} /> : <Bagel speed={0.25} />}
-      </div>
-      
-      <div className="flex items-center justify-center h-[85vh] p-5" style={{ zIndex: 1 }}>
-        <div className="text-center bg-black/50">
-          <div className="text-white mb-20">
+      {isMobile ? <BagelMini speed={0.25} scrollWithPage={false} /> : <Bagel speed={0.25} scrollWithPage={false} />}
+
+      <div className="flex items-center justify-center h-[85vh] px-4" style={{ zIndex: 1 }}>
+        <div className="text-center p-8 rounded-lg max-w-4xl w-full">
+          <div className="text-white mb-16">
             {/* <Countdown /> */}
-            <h1>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold">
               <TypeAnimation
                 sequence={[
                   'COMING SOON',
@@ -200,12 +168,13 @@ function App() {
                 style={{ 
                   fontFamily: 'monospace',
                   textShadow: '0 0 5px rgba(255, 255, 255, 0.7)',
-                  whiteSpace: 'pre'
+                  whiteSpace: 'nowrap',
+                  overflow: 'visible'
                 }}
               />
             </h1>
           </div>
-          <div className="animate-fade-in-2 mt-20">
+          <div className="mt-16">
             <a 
               href="https://luma.com/xnofhh2r" 
               target="_blank" 
@@ -235,11 +204,19 @@ function App() {
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              Register Here
+              Register Here 🥯
             </a>
           </div>
         </div>
       </div>
+
+      {/* Who's Coming Section */}
+      <div className="relative" style={{ zIndex: 10, minHeight: '100vh' }}>
+        <WhosComing />
+      </div>
+
+      {/* Spacer for better layout */}
+      <div style={{ height: '20vh' }}></div>
     </>
   );
 }
