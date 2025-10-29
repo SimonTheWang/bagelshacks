@@ -33,35 +33,73 @@ export default function WhosComing() {
   const [attendees, setAttendees] = useState<Attendee[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const sortAttendees = (data: Attendee[]) => {
+    // Sort by event_role: founder → organizer → helper → guest → speaker → hacker → no role
+    const roleOrder = { founder: 1, organizer: 2, helper: 3, guest: 4, speaker: 5, hacker: 6 };
+    return data.sort((a, b) => {
+      const aOrder = a.event_role ? roleOrder[a.event_role as keyof typeof roleOrder] || 7 : 7;
+      const bOrder = b.event_role ? roleOrder[b.event_role as keyof typeof roleOrder] || 7 : 7;
+      return aOrder - bOrder;
+    });
+  };
+
   useEffect(() => {
-    fetchAttendees();
-  }, []);
+    // Fetch initial attendees
+    async function fetchAttendees() {
+      try {
+        const { data, error } = await supabase
+          .from('attendees')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-  async function fetchAttendees() {
-    try {
-      const { data, error } = await supabase
-        .from('attendees')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching attendees:', error);
-      } else {
-        // Sort by event_role: founder → organizer → helper → guest → speaker → hacker → no role
-        const roleOrder = { founder: 1, organizer: 2, helper: 3, guest: 4, speaker: 5, hacker: 6 };
-        const sorted = (data || []).sort((a, b) => {
-          const aOrder = a.event_role ? roleOrder[a.event_role as keyof typeof roleOrder] || 7 : 7;
-          const bOrder = b.event_role ? roleOrder[b.event_role as keyof typeof roleOrder] || 7 : 7;
-          return aOrder - bOrder;
-        });
-        setAttendees(sorted);
+        if (error) {
+          console.error('Error fetching attendees:', error);
+        } else {
+          setAttendees(sortAttendees(data || []));
+        }
+      } catch (err) {
+        console.error('Error:', err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('Error:', err);
-    } finally {
-      setLoading(false);
     }
-  }
+
+    fetchAttendees();
+
+    // Set up real-time subscription for new/updated attendees
+    const channel = supabase
+      .channel('attendees-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'attendees'
+        },
+        (payload) => {
+          console.log('Real-time update:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            // Add new attendee and re-sort
+            setAttendees(prev => sortAttendees([...prev, payload.new as Attendee]));
+          } else if (payload.eventType === 'UPDATE') {
+            // Update existing attendee and re-sort
+            setAttendees(prev => sortAttendees(
+              prev.map(a => a.id === payload.new.id ? payload.new as Attendee : a)
+            ));
+          } else if (payload.eventType === 'DELETE') {
+            // Remove deleted attendee
+            setAttendees(prev => prev.filter(a => a.id !== payload.old.id));
+          }
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -87,11 +125,14 @@ export default function WhosComing() {
       </h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {attendees.map((attendee) => (
+        {attendees.map((attendee, index) => (
           <div
             key={attendee.id}
-            className="group relative overflow-hidden rounded-xl shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-3xl"
-            style={{ aspectRatio: '3/4' }}
+            className="group relative overflow-hidden rounded-xl shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-3xl animate-fade-in-1"
+            style={{ 
+              aspectRatio: '3/4',
+              animationDelay: `${index * 100}ms`
+            }}
           >
             {/* Image Background - Only takes up top 70% */}
             <div className="absolute top-0 left-0 right-0 h-[70%]">
