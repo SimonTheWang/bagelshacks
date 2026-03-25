@@ -8,6 +8,7 @@ interface Attendee {
   image_url?: string;
   company?: string;
   role?: string;
+  discord?: string;
   event_role?: 'speaker' | 'hacker' | 'organizer' | 'guest' | 'helper' | 'founder' | 'participant';
 }
 
@@ -176,6 +177,11 @@ export default function WhosComing() {
                   {attendee.role && <span>{attendee.role}</span>}
                   {attendee.role && attendee.company && <span> • </span>}
                   {attendee.company && <span>{attendee.company}</span>}
+                </div>
+              )}
+              {attendee.discord && (
+                <div className="text-white/80 text-xs font-medium mt-2 bg-indigo-600/40 backdrop-blur-sm px-3 py-1 rounded-full inline-block border border-indigo-400/30">
+                  Discord: {attendee.discord}
                 </div>
               )}
             </div>

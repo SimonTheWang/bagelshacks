@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface FormData {
   name: string;
@@ -9,11 +9,22 @@ interface FormData {
   bio_point_3: string;
   company: string;
   role: string;
+  discord: string;
 }
 
 const inputClass = "w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none";
 
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function Admin() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     bio_point_1: '',
@@ -21,9 +32,21 @@ export default function Admin() {
     bio_point_3: '',
     company: '',
     role: '',
+    discord: '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = () => setImagePreview(reader.result as string);
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,28 +57,23 @@ export default function Admin() {
       const bioPoints = [formData.bio_point_1, formData.bio_point_2, formData.bio_point_3]
         .filter(p => p.trim() !== '');
       const bioText = bioPoints.length > 0 ? bioPoints.join(' • ') : '';
+      const imageUrl = imageFile ? await fileToBase64(imageFile) : '';
 
       const { error } = await supabase
         .from('attendees')
         .insert([{
           name: formData.name,
           bio: bioText,
+          image_url: imageUrl || null,
           company: formData.company,
           role: formData.role,
-          event_role: 'participant',
+          discord: formData.discord || null,
+          event_role: 'hacker',
         }]);
 
       if (error) throw error;
 
-      setMessage({ type: 'success', text: 'Attendee added successfully!' });
-      setFormData({
-        name: '',
-        bio_point_1: '',
-        bio_point_2: '',
-        bio_point_3: '',
-        company: '',
-        role: '',
-      });
+      navigate('/');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to add attendee';
       setMessage({ type: 'error', text: errorMessage });
@@ -138,6 +156,46 @@ export default function Admin() {
               className={inputClass}
               placeholder="Tech Corp / UCLA"
             />
+          </div>
+
+          <div>
+            <label htmlFor="discord" className="block text-sm font-medium mb-2">
+              Discord Username
+            </label>
+            <input
+              type="text"
+              id="discord"
+              name="discord"
+              value={formData.discord}
+              onChange={handleChange}
+              className={inputClass}
+              placeholder="username"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Photo
+            </label>
+            {imagePreview ? (
+              <div className="mb-3">
+                <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg border-2 border-blue-500" />
+                <button
+                  type="button"
+                  onClick={() => { setImageFile(null); setImagePreview(''); }}
+                  className="mt-2 block text-sm text-red-400 hover:text-red-300"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className={`${inputClass} file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer`}
+              />
+            )}
           </div>
 
           <div>
