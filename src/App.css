@@ -12,67 +12,157 @@
   }
 }
 
-/* Mobile optimizations */
 @media (max-width: 767px) {
   body {
     overflow-x: hidden;
   }
-  
   * {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
   }
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* ── Page load transition ── */
+.page-wrapper {
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.page-loaded {
+  opacity: 1;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* ── Header ── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 0.75rem 1rem;
+  transform: translateY(-100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.page-loaded .header {
+  transform: translateY(0);
+}
+@media (min-width: 768px) {
+  .header {
+    padding: 0.875rem 2rem;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+}
+@media (min-width: 768px) {
+  .header-nav {
+    gap: 0.5rem;
+    font-size: 0.875rem;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+.header-link {
+  color: #374151;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+.header-link:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #111;
+}
+
+.header-dot {
+  color: #d1d5db;
+  margin: 0 0.25rem;
+  font-size: 1rem;
+  user-select: none;
+}
+
+/* ── Hero ── */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85vh;
+  padding: 1rem;
+  z-index: 1;
+}
+
+.hero-content {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  max-width: 56rem;
+  width: 100%;
+}
+
+.hero-title {
+  color: white;
+  margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+}
+.page-loaded .hero-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-cta {
+  margin-top: 4rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s;
+}
+.page-loaded .hero-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── CTA Button ── */
+.cta-button {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.65rem 1.5rem;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  display: inline-block;
+  transition: background 0.3s, transform 0.3s;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  touch-action: manipulation;
+}
+@media (min-width: 768px) {
+  .cta-button {
+    font-size: 1.25rem;
+    padding: 0.75rem 2rem;
   }
 }
-
-.card {
-  padding: 2em;
+.cta-button:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.05);
+  color: #ffffff;
 }
 
-.read-the-docs {
-  color: #888;
-}
-
+/* ── Attendee card fade-in ── */
 .animate-fade-in-1 {
   opacity: 0;
-  animation: fadeIn 2s forwards;
-}
-
-.animate-fade-in-2 {
-  opacity: 0;
-  animation: fadeIn 2s 1s forwards; /* 1s delay for staggered effect */
-}
-
-.animate-fade-in-3 {
-  opacity: 0;
-  animation: fadeIn 2s 2s forwards; /* 1s delay for staggered effect */
+  animation: fadeIn 0.6s ease forwards;
 }
 
 @keyframes fadeIn {
@@ -80,13 +170,8 @@
     opacity: 1;
   }
 }
-/**
-* Project : simply-countdown
-* File : simplyCountdown.theme.default
-* Author : Vincent Loy <vincent.loy1@gmail.com>
-* Theme : Light Modern
-*/
 
+/* ── Countdown (kept for chapter-1) ── */
 .simply-countdown {
   overflow: hidden;
   display: flex;
@@ -106,7 +191,7 @@
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
 }
@@ -140,11 +225,9 @@
     height: 75px;
     padding: 1.75rem;
   }
-
   .simply-countdown > .simply-section .simply-amount {
     font-size: 1.75rem;
   }
-
   .simply-countdown > .simply-section .simply-word {
     font-size: 0.75rem;
   }
@@ -156,11 +239,9 @@
     height: 90px;
     padding: 2rem;
   }
-
   .simply-countdown > .simply-section .simply-amount {
     font-size: 2rem;
   }
-
   .simply-countdown > .simply-section .simply-word {
     font-size: 0.8rem;
   }

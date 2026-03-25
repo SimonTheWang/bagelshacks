@@ -8,7 +8,7 @@ interface Attendee {
   image_url?: string;
   company?: string;
   role?: string;
-  event_role?: 'speaker' | 'hacker' | 'organizer' | 'guest' | 'helper' | 'founder';
+  event_role?: 'speaker' | 'hacker' | 'organizer' | 'guest' | 'helper' | 'founder' | 'participant';
 }
 
 const roleEmojis = {
@@ -17,7 +17,8 @@ const roleEmojis = {
   helper: '🤝',
   guest: '👥',
   speaker: '🎤',
-  hacker: '💻'
+  hacker: '💻',
+  participant: '🙋'
 };
 
 const roleLabels = {
@@ -26,7 +27,8 @@ const roleLabels = {
   helper: 'Helper',
   guest: 'Guest',
   speaker: 'Speaker',
-  hacker: 'Hacker'
+  hacker: 'Hacker',
+  participant: 'Participant'
 };
 
 export default function WhosComing() {
@@ -35,7 +37,7 @@ export default function WhosComing() {
 
   const sortAttendees = (data: Attendee[]) => {
     // Sort by event_role: founder → organizer → helper → guest → speaker → hacker → no role
-    const roleOrder = { founder: 1, organizer: 2, helper: 3, guest: 4, speaker: 5, hacker: 6 };
+    const roleOrder = { founder: 1, organizer: 2, helper: 3, guest: 4, speaker: 5, hacker: 6, participant: 7 };
     return data.sort((a, b) => {
       const aOrder = a.event_role ? roleOrder[a.event_role as keyof typeof roleOrder] || 7 : 7;
       const bOrder = b.event_role ? roleOrder[b.event_role as keyof typeof roleOrder] || 7 : 7;
